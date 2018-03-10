@@ -1,4 +1,4 @@
-package academy.learnprogramming.queueschallenge;
+package QueueStackChallenge;
 
 import java.util.LinkedList;
 
