@@ -1,4 +1,4 @@
-package disjointsetunionfind;
+package graph.disjointsetunionfind;
 
 public class Main {
 

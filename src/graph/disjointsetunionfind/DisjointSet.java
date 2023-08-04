@@ -1,4 +1,4 @@
-package disjointsetunionfind;
+package graph.disjointsetunionfind;
 
 import java.util.Arrays;
 import java.util.HashSet;
