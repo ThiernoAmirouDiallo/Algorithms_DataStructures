@@ -1,9 +1,46 @@
 package graph;
 
+import static graph.GraphBuilder.getGraph;
+
 import java.util.LinkedList;
 import java.util.stream.Collectors;
 
+import graph.disjointsetunionfind.DisjointSet;
+
 public class DepthFirstSearch {
+
+	public static void main( String[] args ) {
+
+		/*
+		 *                ___ 0 ___
+		 * 			    /     |    \
+		 *    8        1----- 2 ----3
+		 *    |        |   /  |  /  |
+		 *    9         4     5     |
+		 *              \   /       |
+		 * 				  6------- 7
+		 * */
+		AdjacencyListGraph graph = getGraph(true);
+
+		// 1 - Depth first search
+		System.out.println( "Depth first search" );
+		System.out.println( DepthFirstSearch.depthFirstSearch( 0, 5, graph ) );
+		System.out.println( DepthFirstSearch.depthFirstSearch( 0, 0, graph ) );
+		System.out.println( DepthFirstSearch.depthFirstSearch( 2, 6, graph ) );
+		System.out.println( DepthFirstSearch.depthFirstSearch( 0, 9, graph ) );
+		System.out.println( DepthFirstSearch.depthFirstSearch( 8, 9, graph ) );
+
+		// 2 - Breadth first search
+
+		// 3 - Minimum spanning tree
+
+		// 3.1 - Kruskal's algorithm
+
+		// 3.2 - Prim's algorithm
+
+		// 4 - Shortest path
+		// 4.1 Dijkstra's algorithm
+	}
 
 	// return the path from startNode to endNode and its cost
 	public static String depthFirstSearch( int startNode, int endNode, AdjacencyListGraph graph ) {
@@ -24,7 +61,7 @@ public class DepthFirstSearch {
 
 	private static String depthFirstSearch( int startNode, int endNode, AdjacencyListGraph graph, boolean[] visited, int[] parent ) {
 		if ( startNode == endNode ) {
-			return getPath( startNode, endNode, parent );
+			return getPath( endNode, parent );
 		}
 
 		for ( int n : graph.getNode( startNode ).getAdjacentNodesList() ) {
@@ -39,7 +76,7 @@ public class DepthFirstSearch {
 		return null;
 	}
 
-	private static String getPath( int startNode, int endNode, int[] parent ) {
+	private static String getPath( int endNode, int[] parent ) {
 		LinkedList<Integer> path = new LinkedList<>();
 		int currentNode = endNode;
 		int cost = -1; // cost is the number of edges between startNode and endNode

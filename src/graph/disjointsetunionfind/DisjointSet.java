@@ -74,11 +74,11 @@ public class DisjointSet {
 		}
 	}
 
-	String getS() {
+	public String getS() {
 		return Arrays.stream( s ).boxed().map( String::valueOf ).collect( Collectors.joining( ", " ) );
 	}
 
-	String getRoots() {
+	public String getRoots() {
 		return roots.stream().map( i -> String.format( "%s: size(%s)", i, Math.abs( s[i] ) ) ).collect( Collectors.joining( ", " ) );
 	}
 
