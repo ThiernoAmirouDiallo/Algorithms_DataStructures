@@ -2,10 +2,14 @@ package graph.mininumspanningtrees;
 
 import static graph.GraphBuilder.getGraph;
 
+import com.sun.tools.javac.util.Pair;
+
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Set;
@@ -37,15 +41,85 @@ public class PrimAlgorithm {
 
 		AdjacencyListGraph<Character> graph = getGraph( edges );
 		List<Edge<Character>> primsMst = getPrimsMst( graph );
+		List<Edge<Character>> primsMst2 = getPrimsMstAnotherWay( graph );
 		Integer cost = primsMst.stream().map( Edge::getWeight ).reduce( 0, Integer::sum );
+		Integer cost2 = primsMst.stream().map( Edge::getWeight ).reduce( 0, Integer::sum );
 		System.out.println( "Cost = " + cost + ", MST: " + primsMst.stream().sorted( Comparator.comparing( Objects::toString ) ).collect( Collectors.toList() ) );
+		System.out.println( "Cost = " + cost2 + ", MST: " + primsMst2.stream().sorted( Comparator.comparing( Objects::toString ) ).collect( Collectors.toList() ) );
 
 		System.out.println( "Graph with multiple components" );
 		graph.addEdge( 'I', 'J', 9 );
 		System.out.println( getPrimsMst( graph ) );
+		System.out.println( getPrimsMstAnotherWay( graph ) );
 	}
 
 	public static List<Edge<Character>> getPrimsMst( AdjacencyListGraph<Character> graph ) {
+		// By default, the priority queue in Java is min Priority queue with natural ordering
+		// PriorityQueue of edges represented by Pair.of( vertex, distance )
+		PriorityQueue<Pair<Integer, Integer>> verticesPriorityQueue = new PriorityQueue<>( Comparator.comparing( pair -> pair.snd ) );
+
+		// distance from joined vertices to this vertex if known
+		Map<Integer, Integer> distance = new HashMap<>();
+
+		// distance to node 0 = 0
+		verticesPriorityQueue.add( Pair.of( 0, 0 ) );
+
+		// initialize unknown distances to Integer.MAX_VALUE
+		for ( int i = 1; i < graph.getNumOfNodes(); i++ ) {
+			verticesPriorityQueue.add( Pair.of( i, Integer.MAX_VALUE ) ); // set max distance to vertex(i)
+			distance.put( i, Integer.MAX_VALUE );
+		}
+
+		Set<Integer> joinedVertices = new HashSet<>(); // to track reached vertices
+		Map<Integer, Pair<Integer, Integer>> parent = new HashMap<>(); // parent of i is pair (j, weight)
+
+		// repeat N times
+		while ( !verticesPriorityQueue.isEmpty() ) {
+			Pair<Integer, Integer> currentVertex = verticesPriorityQueue.poll();
+
+			// no edge to this vertex was discovered: multiple component graph -> no MST
+			if ( currentVertex.snd == Integer.MAX_VALUE ) {
+				break;
+			}
+
+			// add the discovered
+			joinedVertices.add( currentVertex.fst );
+
+			// update adjacent vertices distance
+			graph.getNode( currentVertex.fst ).getAdjacentNodesListWithWeight().forEach( vertexWeightPair -> {
+				if ( !joinedVertices.contains( vertexWeightPair.fst ) && vertexWeightPair.snd < distance.get( vertexWeightPair.fst ) ) {
+					// because we will update the distance, let's update the priority queue by removing and reinserting with the new distance
+					verticesPriorityQueue.remove( Pair.of( vertexWeightPair.fst, distance.get( vertexWeightPair.fst ) ) );
+
+					// update distance
+					distance.put( vertexWeightPair.fst, vertexWeightPair.snd );
+					verticesPriorityQueue.add( Pair.of( vertexWeightPair.fst, distance.get( vertexWeightPair.fst ) ) );
+
+					// the parent of the adjacent vertex is the current edge
+					parent.put( vertexWeightPair.fst, Pair.of( currentVertex.fst, vertexWeightPair.snd ) );
+				}
+			} );
+		}
+
+		if ( joinedVertices.size() == graph.getNumOfNodes() ) {
+			// compute edges
+			return computeMstEdges( parent, graph );
+		} else {
+			// no route connects all the nodes (multiple components found )
+			return new ArrayList<>();
+		}
+
+	}
+
+	private static List<Edge<Character>> computeMstEdges( Map<Integer, Pair<Integer, Integer>> parents, AdjacencyListGraph<Character> graph ) {
+		List<Edge<Character>> mstEdges = new ArrayList<>();
+
+		parents.forEach( ( child, parentWeightPair ) -> mstEdges.add( new Edge<>( graph.getNode( parentWeightPair.fst ).getValue(), graph.getNode( child ).getValue(), parentWeightPair.snd ) ) );
+
+		return mstEdges;
+	}
+
+	public static List<Edge<Character>> getPrimsMstAnotherWay( AdjacencyListGraph<Character> graph ) {
 		AdjacencyListGraph.Node<Character> initialNode = graph.getNode( 0 );
 
 		// By default, the priority queue in Java is min Priority queue with natural ordering
@@ -56,6 +130,7 @@ public class PrimAlgorithm {
 		Set<Integer> joinedVertices = new HashSet<>();
 		Set<Edge<Integer>> mstEdges = new HashSet<>();
 
+		// Repeat M times (number of edges)
 		while ( !edgePriorityQueue.isEmpty() && joinedVertices.size() < graph.getNumOfNodes() ) {
 			Edge<Integer> currentEdge = edgePriorityQueue.poll();
 
@@ -97,9 +172,7 @@ public class PrimAlgorithm {
 
 		if ( joinedVertices.size() == graph.getNumOfNodes() ) {
 			// converting the edges if ids to edges of characters
-			return mstEdges.stream()
-					.map( e -> new Edge<>( graph.getNode( e.getNode1() ).getValue(), graph.getNode( e.getNode2() ).getValue(), e.getWeight() ) )
-					.collect( Collectors.toList() );
+			return mstEdges.stream().map( e -> new Edge<>( graph.getNode( e.getNode1() ).getValue(), graph.getNode( e.getNode2() ).getValue(), e.getWeight() ) ).collect( Collectors.toList() );
 		} else {
 			// no route connects all the nodes (multiple components found )
 			return new ArrayList<>();

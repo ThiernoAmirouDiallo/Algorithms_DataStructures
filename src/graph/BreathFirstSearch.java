@@ -69,6 +69,8 @@ public class BreathFirstSearch {
 					parent[n] = currentNode;
 					visited[n] = true;
 					queue.add( n );
+				} else {
+					// there is a cyble in the graph
 				}
 			}
 

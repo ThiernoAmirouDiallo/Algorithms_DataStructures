@@ -57,6 +57,8 @@ public class DepthFirstSearch {
 				visited[n] = true;
 
 				return depthFirstSearch( n, endNode, graph, visited, parent );
+			} else {
+				// there is a cycle in the graph
 			}
 		}
 
