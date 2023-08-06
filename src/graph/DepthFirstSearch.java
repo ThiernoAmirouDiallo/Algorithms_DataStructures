@@ -27,17 +27,6 @@ public class DepthFirstSearch {
 		System.out.println( DepthFirstSearch.depthFirstSearch( 2, 6, graph ) );
 		System.out.println( DepthFirstSearch.depthFirstSearch( 0, 9, graph ) );
 		System.out.println( DepthFirstSearch.depthFirstSearch( 8, 9, graph ) );
-
-		// 2 - Breadth first search
-
-		// 3 - Minimum spanning tree
-
-		// 3.1 - Kruskal's algorithm
-
-		// 3.2 - Prim's algorithm
-
-		// 4 - Shortest path
-		// 4.1 Dijkstra's algorithm
 	}
 
 	// return the path from startNode to endNode and its cost
