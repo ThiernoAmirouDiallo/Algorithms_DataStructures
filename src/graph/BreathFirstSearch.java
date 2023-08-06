@@ -13,14 +13,14 @@ public class BreathFirstSearch {
 
 		/*
 		 *                ___ 0 ___
-		 * 			(2) /     |    \
+		 * 			    /     |    \
 		 *    8        1----- 2 ----3
 		 *    |        |   /  |  /  |
 		 *    9         4     5     |
 		 *              \   /       |
 		 * 				  6------- 7
 		 * */
-		AdjacencyListGraph graph = getGraph( true );
+		AdjacencyListGraph<Integer> graph = getGraph( true );
 
 		// 1 - Breath first search
 		System.out.println( "Breath first search" );
@@ -67,7 +67,7 @@ public class BreathFirstSearch {
 		return path != null ? path : String.format( "No route found from %s to %s", startNode, endNode );
 	}
 
-	private static String breathFirstSearch( int endNode, AdjacencyListGraph graph, boolean[] visited, int[] parent, Queue<Integer> queue ) {
+	private static String breathFirstSearch( int endNode, AdjacencyListGraph<Integer> graph, boolean[] visited, int[] parent, Queue<Integer> queue ) {
 		while ( !queue.isEmpty() ) {
 			int currentNode = queue.poll();
 
@@ -80,7 +80,6 @@ public class BreathFirstSearch {
 					parent[n] = currentNode;
 					visited[n] = true;
 					queue.add( n );
-
 				}
 			}
 

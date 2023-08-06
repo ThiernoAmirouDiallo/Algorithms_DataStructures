@@ -82,4 +82,8 @@ public class DisjointSet {
 		return roots.stream().map( i -> String.format( "%s: size(%s)", i, Math.abs( s[i] ) ) ).collect( Collectors.joining( ", " ) );
 	}
 
+	public int getNumberComponents() {
+		return roots.size();
+	}
+
 }

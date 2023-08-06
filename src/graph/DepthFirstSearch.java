@@ -5,8 +5,6 @@ import static graph.GraphBuilder.getGraph;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
 
-import graph.disjointsetunionfind.DisjointSet;
-
 public class DepthFirstSearch {
 
 	public static void main( String[] args ) {
@@ -20,7 +18,7 @@ public class DepthFirstSearch {
 		 *              \   /       |
 		 * 				  6------- 7
 		 * */
-		AdjacencyListGraph graph = getGraph(true);
+		AdjacencyListGraph<Integer> graph = getGraph( true );
 
 		// 1 - Depth first search
 		System.out.println( "Depth first search" );
@@ -43,7 +41,7 @@ public class DepthFirstSearch {
 	}
 
 	// return the path from startNode to endNode and its cost
-	public static String depthFirstSearch( int startNode, int endNode, AdjacencyListGraph graph ) {
+	public static String depthFirstSearch( int startNode, int endNode, AdjacencyListGraph<Integer> graph ) {
 		// validating inputs
 		if ( startNode < 0 || startNode >= graph.getNumOfNodes() || endNode < 0 || endNode >= graph.getNumOfNodes() ) {
 			return "Invalid input";
@@ -59,7 +57,7 @@ public class DepthFirstSearch {
 		return path != null ? path : String.format( "No route found from %s to %s", startNode, endNode );
 	}
 
-	private static String depthFirstSearch( int startNode, int endNode, AdjacencyListGraph graph, boolean[] visited, int[] parent ) {
+	private static String depthFirstSearch( int startNode, int endNode, AdjacencyListGraph<Integer> graph, boolean[] visited, int[] parent ) {
 		if ( startNode == endNode ) {
 			return getPath( endNode, parent );
 		}
