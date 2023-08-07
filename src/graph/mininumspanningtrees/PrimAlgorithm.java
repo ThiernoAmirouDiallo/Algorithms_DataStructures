@@ -43,7 +43,7 @@ public class PrimAlgorithm {
 		List<Edge<Character>> primsMst = getPrimsMst( graph );
 		List<Edge<Character>> primsMst2 = getPrimsMstAnotherWay( graph );
 		Integer cost = primsMst.stream().map( Edge::getWeight ).reduce( 0, Integer::sum );
-		Integer cost2 = primsMst.stream().map( Edge::getWeight ).reduce( 0, Integer::sum );
+		Integer cost2 = primsMst2.stream().map( Edge::getWeight ).reduce( 0, Integer::sum );
 		System.out.println( "Cost = " + cost + ", MST: " + primsMst.stream().sorted( Comparator.comparing( Objects::toString ) ).collect( Collectors.toList() ) );
 		System.out.println( "Cost = " + cost2 + ", MST: " + primsMst2.stream().sorted( Comparator.comparing( Objects::toString ) ).collect( Collectors.toList() ) );
 
