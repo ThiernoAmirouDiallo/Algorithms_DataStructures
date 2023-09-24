@@ -23,7 +23,7 @@ public class DijsktraAlgorithm {
 	public static void main( String[] args ) {
 
 		/**
-		 * retuns this graph
+		 * returns this graph
 		 *                       B  \15
 		 *                  5/  /      C_________
 		 *                A   5/ 16/   |  \      |
@@ -61,7 +61,7 @@ public class DijsktraAlgorithm {
 
 		// distance to start vertex = 0
 		verticesPriorityQueue.add( Pair.of( startVertexId, 0 ) );
-		distance.put( startVertexId, startVertexId );
+		distance.put( startVertexId, 0 );
 
 		// initialize unknown distances to Integer.MAX_VALUE
 		for ( int i = 1; i < graph.getNumOfNodes(); i++ ) {
